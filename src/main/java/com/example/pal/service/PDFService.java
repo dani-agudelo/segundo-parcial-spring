@@ -42,23 +42,6 @@ public class PDFService {
             // Añadir contenido principal
             document.add(new Paragraph(content).setMarginTop(20));
 
-            // Ejemplo de tabla simple
-            Table table = new Table(UnitValue.createPercentArray(new float[]{30, 70}));
-
-            // Cabecera de la tabla
-            table.addHeaderCell(new Cell().add(new Paragraph("Campo").setBold()));
-            table.addHeaderCell(new Cell().add(new Paragraph("Valor").setBold()));
-
-            // Filas de la tabla
-            table.addCell(new Cell().add(new Paragraph("Ejemplo 1")));
-            table.addCell(new Cell().add(new Paragraph("Valor de ejemplo 1")));
-
-            table.addCell(new Cell().add(new Paragraph("Ejemplo 2")));
-            table.addCell(new Cell().add(new Paragraph("Valor de ejemplo 2")));
-
-            // Añadir tabla al documento
-            document.add(table.setMarginTop(20));
-
         } finally {
             // Cerrar documento
             document.close();

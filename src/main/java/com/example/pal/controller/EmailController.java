@@ -33,14 +33,14 @@ public class EmailController {
         }
     }
 
-    @GetMapping("/send-pdf-email")
+    @GetMapping("/send-email-pdf")
     public String sendPdfEmail(@RequestParam String to, @RequestParam String subject,
-                               @RequestParam String emailText, @RequestParam String pdfTitle,
-                               @RequestParam String pdfContent) {
+            @RequestParam String emailText, @RequestParam String titlePdf,
+            @RequestParam String contentPdf) {
 
         try {
             // Generar PDF
-            byte[] pdfBytes = pdfService.generateSimplePdf(pdfTitle, pdfContent);
+            byte[] pdfBytes = pdfService.generateSimplePdf(titlePdf, contentPdf);
 
             // Enviar email con PDF adjunto
             emailService.sendEmailWithAttachment(to, subject, emailText, pdfBytes, "documento.pdf");
