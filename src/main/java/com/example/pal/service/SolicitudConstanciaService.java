@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SolicitudConstanciaService {
 
-    private final SolicitudConstanciaRepository repository;
+    private final SolicitudConstanciaRepository solicitudRepository;
     private final PDFService pdfService;
     private final EmailService emailService;
 
@@ -28,20 +28,24 @@ public class SolicitudConstanciaService {
         solicitud.setFechaSolicitud(LocalDateTime.now());
         solicitud.setEstado("ENVIADA");
 
-        SolicitudConstancia saved = repository.save(solicitud);
+        SolicitudConstancia saved = solicitudRepository.save(solicitud);
 
         // Generar PDF personalizado
-        String contenido = "Constancia para: " + saved.getNombre() + "\nMatrícula: " + saved.getMatricula() + "\nTipo: " + saved.getTipoConstancia();
+        String contenido = "La Universidad XYZ certifica que " + solicitud.getNombre() +
+                " (matrícula: " + solicitud.getMatricula() + ") " +
+                "está actualmente matriculado(a) y vigente en el programa académico correspondiente.\n\n";
+
         byte[] pdf = pdfService.generateSimplePdf("Constancia Académica", contenido);
 
         // Enviar correo con PDF adjunto
         String cuerpo = "Hola " + saved.getNombre() + ",\nAdjuntamos tu constancia académica solicitada.";
-        emailService.sendEmailWithAttachment(saved.getCorreo(), "Tu constancia académica", cuerpo, pdf, "constancia.pdf");
+        emailService.sendEmailWithAttachment(saved.getCorreo(), "Tu constancia académica", cuerpo, pdf,
+                "constancia.pdf");
 
         return saved;
     }
 
     public List<SolicitudConstancia> obtenerSolicitudes() {
-        return repository.findAll();
+        return solicitudRepository.findAll();
     }
 }

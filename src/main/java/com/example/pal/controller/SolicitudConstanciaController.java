@@ -18,9 +18,11 @@ public class SolicitudConstanciaController {
     private final SolicitudConstanciaService service;
 
     @PostMapping("/registrar")
-    public ResponseEntity<SolicitudConstancia> registrar(@Valid @RequestBody SolicitudConstanciaDTO dto) throws Exception {
+    public ResponseEntity<String> registrar(@Valid @RequestBody SolicitudConstanciaDTO dto) throws Exception {
         SolicitudConstancia solicitud = service.registrarSolicitud(dto);
-        return ResponseEntity.ok(solicitud);
+        String mensaje = "Solicitud registrada exitosamente. Se ha enviado la constancia al correo: "
+                + solicitud.getCorreo();
+        return ResponseEntity.ok(mensaje);
     }
 
     @GetMapping("/todas")

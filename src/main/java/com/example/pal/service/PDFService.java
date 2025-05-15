@@ -4,9 +4,6 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.properties.UnitValue;
 
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
@@ -30,20 +27,22 @@ public class PDFService {
 
         try {
             // Añadir título
-            document.add(new Paragraph(title).setBold().setFontSize(16));
+            document.add(new Paragraph(title).setBold().setFontSize(16)
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER));
 
             // Añadir fecha y hora
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             document.add(new Paragraph("Generado: " + now.format(formatter))
-                .setFontSize(10)
-                .setItalic());
-
+                    .setFontSize(10)
+                    .setItalic())
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.RIGHT);
             // Añadir contenido principal
-            document.add(new Paragraph(content).setMarginTop(20));
+            document.add(new Paragraph(content)
+                    .setMarginTop(20)
+                    .setTextAlignment(com.itextpdf.layout.properties.TextAlignment.CENTER));
 
         } finally {
-            // Cerrar documento
             document.close();
         }
 

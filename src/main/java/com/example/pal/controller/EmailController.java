@@ -23,6 +23,13 @@ public class EmailController {
     public EmailController() {
     }
 
+    /**
+     * Send a simple email
+     * @param to The recipient's email address
+     * @param subject The subject of the email
+     * @param text The body of the email
+     * @return
+     */
     @GetMapping("/send-email")
     public String sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String text) {
         try {
@@ -33,16 +40,23 @@ public class EmailController {
         }
     }
 
+    /**
+     * Send an email with a PDF attachment (for testing purposes)
+     * @param to The recipient's email address
+     * @param subject The subject of the email
+     * @param emailText The body of the email
+     * @param titlePdf The title of the PDF
+     * @param contentPdf The content of the PDF
+     * @return
+     */
     @GetMapping("/send-email-pdf")
     public String sendPdfEmail(@RequestParam String to, @RequestParam String subject,
             @RequestParam String emailText, @RequestParam String titlePdf,
             @RequestParam String contentPdf) {
 
         try {
-            // Generar PDF
             byte[] pdfBytes = pdfService.generateSimplePdf(titlePdf, contentPdf);
 
-            // Enviar email con PDF adjunto
             emailService.sendEmailWithAttachment(to, subject, emailText, pdfBytes, "documento.pdf");
 
             return "Correo con PDF adjunto enviado exitosamente a: " + to;
@@ -52,20 +66,4 @@ public class EmailController {
         }
     }
 
-    // Endpoint adicional para descargar el PDF directamente (para pruebas)
-    @GetMapping("/generate-pdf")
-    public ResponseEntity<byte[]> generatePdf(@RequestParam String title, @RequestParam String content) {
-        try {
-            byte[] pdfBytes = pdfService.generateSimplePdf(title, content);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=documento.pdf");
-
-            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
